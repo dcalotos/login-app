@@ -89,7 +89,7 @@ jobs:
       
       - name: Start services
         run: |
-          docker-compose up -d
+          docker compose up -d
           sleep 30
       
       - name: Install E2E dependencies
@@ -111,7 +111,7 @@ jobs:
       
       - name: Stop services
         if: always()
-        run: docker-compose down
+        run: docker compose down
 
   docker-build:
     name: Build Docker Images
