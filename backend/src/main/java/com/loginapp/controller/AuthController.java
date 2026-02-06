@@ -3,6 +3,7 @@ package com.loginapp.controller;
 import com.loginapp.dto.*;
 import com.loginapp.security.UserPrincipal;
 import com.loginapp.service.AuthService;
+import com.loginapp.service.EmailVerificationService;
 import com.loginapp.service.PasswordResetService;
 import com.loginapp.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,6 +21,7 @@ public class AuthController {
     private final AuthService authService;
     private final UserService userService;
     private final PasswordResetService passwordResetService;
+    private final EmailVerificationService emailVerificationService;
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@Valid @RequestBody LoginRequest loginRequest,
@@ -72,6 +74,28 @@ public class AuthController {
     @GetMapping("/validate-reset-token")
     public ResponseEntity<MessageResponse> validateResetToken(@RequestParam String token) {
         boolean isValid = passwordResetService.validateToken(token);
+        if (isValid) {
+            return ResponseEntity.ok(new MessageResponse("Token is valid"));
+        } else {
+            return ResponseEntity.badRequest().body(new MessageResponse("Token is invalid or expired"));
+        }
+    }
+
+    @PostMapping("/verify-email")
+    public ResponseEntity<MessageResponse> verifyEmail(@RequestParam String token) {
+        emailVerificationService.verifyEmail(token);
+        return ResponseEntity.ok(new MessageResponse("Email verified successfully"));
+    }
+
+    @PostMapping("/resend-verification")
+    public ResponseEntity<MessageResponse> resendVerification(@Valid @RequestBody ForgotPasswordRequest request) {
+        emailVerificationService.resendVerificationEmail(request.getEmail());
+        return ResponseEntity.ok(new MessageResponse("Verification email sent"));
+    }
+
+    @GetMapping("/validate-verification-token")
+    public ResponseEntity<MessageResponse> validateVerificationToken(@RequestParam String token) {
+        boolean isValid = emailVerificationService.validateToken(token);
         if (isValid) {
             return ResponseEntity.ok(new MessageResponse("Token is valid"));
         } else {

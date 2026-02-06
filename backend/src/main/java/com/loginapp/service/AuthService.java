@@ -30,6 +30,7 @@ public class AuthService {
     private final JwtTokenProvider tokenProvider;
     private final RefreshTokenService refreshTokenService;
     private final AuditLogService auditLogService;
+    private final EmailVerificationService emailVerificationService;
 
     @Transactional
     public JwtResponse login(LoginRequest loginRequest, String ipAddress) {
@@ -84,13 +85,16 @@ public class AuthService {
                 .isVerified(false)
                 .build();
 
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
+
+        // Send email verification
+        emailVerificationService.createVerificationToken(savedUser);
 
         // Log the action
-        auditLogService.logAction(user, "REGISTER", "User registered successfully", ipAddress);
+        auditLogService.logAction(savedUser, "REGISTER", "User registered successfully", ipAddress);
 
-        log.info("User registered successfully: {}", user.getUsername());
-        return new MessageResponse("User registered successfully!");
+        log.info("User registered successfully: {}", savedUser.getUsername());
+        return new MessageResponse("User registered successfully! Please check your email to verify your account.");
     }
 
     @Transactional

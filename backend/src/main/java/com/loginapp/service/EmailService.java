@@ -59,6 +59,35 @@ public class EmailService {
     }
     
     /**
+     * Send email verification email.
+     */
+    public void sendVerificationEmail(String toEmail, String verificationToken) {
+        String verificationLink = frontendUrl + "/verify-email?token=" + verificationToken;
+        
+        // TODO: Replace with actual email sending logic
+        log.info("=================================================");
+        log.info("EMAIL VERIFICATION");
+        log.info("=================================================");
+        log.info("To: {}", toEmail);
+        log.info("Subject: Verify Your Email - {}", appName);
+        log.info("");
+        log.info("Hello,");
+        log.info("");
+        log.info("Thank you for registering!");
+        log.info("Please click the link below to verify your email address:");
+        log.info("");
+        log.info("Verification Link: {}", verificationLink);
+        log.info("");
+        log.info("This link will expire in 24 hours.");
+        log.info("");
+        log.info("If you did not create an account, please ignore this email.");
+        log.info("");
+        log.info("Best regards,");
+        log.info("{} Team", appName);
+        log.info("=================================================");
+    }
+    
+    /**
      * Build HTML email content for password reset.
      */
     private String buildEmailContent(String resetLink) {
