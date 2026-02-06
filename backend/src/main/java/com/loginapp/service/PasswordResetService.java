@@ -51,8 +51,8 @@ public class PasswordResetService {
         emailService.sendPasswordResetEmail(email, token);
         
         // Log the action
-        auditLogService.log(user.getId(), "PASSWORD_RESET_REQUESTED", 
-                "Password reset token generated");
+        auditLogService.logAction(user, "PASSWORD_RESET_REQUESTED", 
+                "Password reset token generated", null);
         
         log.info("Password reset token created for user: {}", user.getUsername());
     }
@@ -85,8 +85,8 @@ public class PasswordResetService {
         passwordResetTokenRepository.save(resetToken);
         
         // Log the action
-        auditLogService.log(user.getId(), "PASSWORD_RESET_SUCCESS", 
-                "Password successfully reset");
+        auditLogService.logAction(user, "PASSWORD_RESET_SUCCESS", 
+                "Password successfully reset", null);
         
         log.info("Password successfully reset for user: {}", user.getUsername());
     }
