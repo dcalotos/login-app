@@ -3,6 +3,7 @@ package com.loginapp.controller;
 import com.loginapp.dto.*;
 import com.loginapp.security.UserPrincipal;
 import com.loginapp.service.AuthService;
+import com.loginapp.service.PasswordResetService;
 import com.loginapp.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -18,6 +19,7 @@ public class AuthController {
 
     private final AuthService authService;
     private final UserService userService;
+    private final PasswordResetService passwordResetService;
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@Valid @RequestBody LoginRequest loginRequest,
@@ -53,6 +55,28 @@ public class AuthController {
     public ResponseEntity<UserResponse> getCurrentUser(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         UserResponse userResponse = userService.getUserProfile(userPrincipal.getId());
         return ResponseEntity.ok(userResponse);
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<MessageResponse> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
+        passwordResetService.createPasswordResetToken(request.getEmail());
+        return ResponseEntity.ok(new MessageResponse("Password reset email sent. Please check your email."));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<MessageResponse> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+        passwordResetService.resetPassword(request.getToken(), request.getNewPassword());
+        return ResponseEntity.ok(new MessageResponse("Password has been reset successfully."));
+    }
+
+    @GetMapping("/validate-reset-token")
+    public ResponseEntity<MessageResponse> validateResetToken(@RequestParam String token) {
+        boolean isValid = passwordResetService.validateToken(token);
+        if (isValid) {
+            return ResponseEntity.ok(new MessageResponse("Token is valid"));
+        } else {
+            return ResponseEntity.badRequest().body(new MessageResponse("Token is invalid or expired"));
+        }
     }
 
     private String getClientIp(HttpServletRequest request) {
