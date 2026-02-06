@@ -131,6 +131,38 @@ BROWSERSTACK_ACCESS_KEY=your-access-key
 - `GET /api/users/profile` - Get user profile
 - `PUT /api/users/profile` - Update user profile
 
+## Rate Limiting
+
+API endpoints are protected with rate limiting:
+
+| Endpoint Type | Limit | Window |
+|---------------|-------|--------|
+| Authentication (login) | 5 requests | 15 minutes |
+| Registration | 3 requests | 1 hour |
+| Password Reset | 3 requests | 1 hour |
+| General API | 100 requests | 1 minute |
+
+Rate limit headers are included in responses:
+- `X-Rate-Limit-Remaining` - Remaining requests
+- `X-Rate-Limit-Retry-After-Seconds` - Seconds to wait if exceeded
+
+## Email Verification
+
+Users receive a verification email upon registration:
+
+1. User registers account
+2. Verification email sent with link
+3. User clicks link to verify email
+4. Account is verified (optional enforcement)
+
+**Frontend Routes:**
+- `/verify-email?token=xxx` - Verify email with token
+
+**API Endpoints:**
+- `POST /api/auth/verify-email?token=xxx` - Verify email
+- `POST /api/auth/resend-verification` - Resend verification email
+- `GET /api/auth/validate-verification-token?token=xxx` - Validate token
+
 ## Testing
 
 ### Unit Tests
@@ -140,9 +172,10 @@ BROWSERSTACK_ACCESS_KEY=your-access-key
 cd backend
 ./mvnw test
 
-# Frontend
+# Frontend (with coverage)
 cd frontend
-npm test
+npm test -- --watch=false --browsers=ChromeHeadless
+npm run test:coverage
 ```
 
 ### E2E Tests
