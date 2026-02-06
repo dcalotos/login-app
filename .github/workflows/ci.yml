@@ -61,7 +61,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd frontend
-          npm ci
+          npm install
       
       - name: Run tests
         run: |
@@ -94,7 +94,7 @@ jobs:
       - name: Install E2E dependencies
         run: |
           cd e2e-tests
-          npm ci
+          npm install
       
       - name: Run E2E tests
         run: |
