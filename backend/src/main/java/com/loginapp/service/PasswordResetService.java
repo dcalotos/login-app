@@ -52,7 +52,7 @@ public class PasswordResetService {
         
         // Log the action
         auditLogService.log(user.getId(), "PASSWORD_RESET_REQUESTED", 
-                "Password reset token generated", null);
+                "Password reset token generated");
         
         log.info("Password reset token created for user: {}", user.getUsername());
     }
@@ -63,15 +63,15 @@ public class PasswordResetService {
     @Transactional
     public void resetPassword(String token, String newPassword) {
         PasswordResetToken resetToken = passwordResetTokenRepository.findByToken(token)
-                .orElseThrow(() -> new TokenRefreshException("Invalid password reset token"));
+                .orElseThrow(() -> new TokenRefreshException(token, "Invalid password reset token"));
         
         if (resetToken.isUsed()) {
-            throw new TokenRefreshException("Password reset token has already been used");
+            throw new TokenRefreshException(token, "Password reset token has already been used");
         }
         
         if (resetToken.isExpired()) {
             passwordResetTokenRepository.delete(resetToken);
-            throw new TokenRefreshException("Password reset token has expired");
+            throw new TokenRefreshException(token, "Password reset token has expired");
         }
         
         User user = resetToken.getUser();
@@ -86,7 +86,7 @@ public class PasswordResetService {
         
         // Log the action
         auditLogService.log(user.getId(), "PASSWORD_RESET_SUCCESS", 
-                "Password successfully reset", null);
+                "Password successfully reset");
         
         log.info("Password successfully reset for user: {}", user.getUsername());
     }
