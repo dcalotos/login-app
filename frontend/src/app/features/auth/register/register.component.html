@@ -1,0 +1,127 @@
+<div class="container">
+  <div class="card">
+    <h1 class="card-title">Create Account</h1>
+    <p class="card-subtitle">Sign up to get started</p>
+
+    @if (error()) {
+      <div class="alert alert-danger">
+        {{ error() }}
+      </div>
+    }
+
+    @if (success()) {
+      <div class="alert alert-success">
+        Registration successful! Redirecting to login...
+      </div>
+    }
+
+    <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
+      <div class="form-group">
+        <label class="form-label" for="username">Username *</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          class="form-control"
+          [(ngModel)]="userData.username"
+          required
+          minlength="3"
+          [disabled]="loading() || success()"
+          placeholder="Choose a username"
+        />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="email">Email *</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          class="form-control"
+          [(ngModel)]="userData.email"
+          required
+          email
+          [disabled]="loading() || success()"
+          placeholder="your@email.com"
+        />
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <label class="form-label" for="firstName">First Name</label>
+            <input
+              type="text"
+              id="firstName"
+              name="firstName"
+              class="form-control"
+              [(ngModel)]="userData.firstName"
+              [disabled]="loading() || success()"
+              placeholder="First name"
+            />
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="form-group">
+            <label class="form-label" for="lastName">Last Name</label>
+            <input
+              type="text"
+              id="lastName"
+              name="lastName"
+              class="form-control"
+              [(ngModel)]="userData.lastName"
+              [disabled]="loading() || success()"
+              placeholder="Last name"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="password">Password *</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          class="form-control"
+          [(ngModel)]="userData.password"
+          required
+          minlength="8"
+          [disabled]="loading() || success()"
+          placeholder="At least 8 characters"
+        />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="confirmPassword">Confirm Password *</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          name="confirmPassword"
+          class="form-control"
+          [(ngModel)]="confirmPassword"
+          required
+          [disabled]="loading() || success()"
+          placeholder="Confirm your password"
+        />
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="loading() || !registerForm.form.valid || success()"
+      >
+        @if (loading()) {
+          <span class="loading"></span>
+        }
+        Create Account
+      </button>
+    </form>
+
+    <p class="text-center mt-3">
+      Already have an account?
+      <a routerLink="/login" class="link">Sign in</a>
+    </p>
+  </div>
+</div>

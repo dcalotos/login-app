@@ -1,0 +1,99 @@
+<div class="navbar">
+  <div class="navbar-container">
+    <div class="navbar-brand">Login App</div>
+    <div class="navbar-user">
+      @if (user()) {
+        <span class="navbar-username">{{ user()?.username }}</span>
+      }
+      <button class="btn btn-danger" (click)="onLogout()">
+        Logout
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  @if (loading()) {
+    <div class="card text-center">
+      <span class="loading"></span>
+      <span>Loading...</span>
+    </div>
+  }
+
+  @if (error()) {
+    <div class="alert alert-danger">
+      {{ error() }}
+    </div>
+  }
+
+  @if (!loading() && user()) {
+    <div class="card">
+      <h1 class="card-title">Dashboard</h1>
+      <p class="card-subtitle">Welcome back, {{ user()?.firstName || user()?.username }}!</p>
+
+      <div class="user-info">
+        <div class="user-info-item">
+          <span class="user-info-label">Username:</span>
+          <span class="user-info-value">{{ user()?.username }}</span>
+        </div>
+
+        <div class="user-info-item">
+          <span class="user-info-label">Email:</span>
+          <span class="user-info-value">{{ user()?.email }}</span>
+        </div>
+
+        @if (user()?.firstName) {
+          <div class="user-info-item">
+            <span class="user-info-label">First Name:</span>
+            <span class="user-info-value">{{ user()?.firstName }}</span>
+          </div>
+        }
+
+        @if (user()?.lastName) {
+          <div class="user-info-item">
+            <span class="user-info-label">Last Name:</span>
+            <span class="user-info-value">{{ user()?.lastName }}</span>
+          </div>
+        }
+
+        <div class="user-info-item">
+          <span class="user-info-label">Account Status:</span>
+          <span class="user-info-value">
+            @if (user()?.isActive) {
+              <span style="color: #27ae60;">Active</span>
+            } @else {
+              <span style="color: #e74c3c;">Inactive</span>
+            }
+          </span>
+        </div>
+
+        <div class="user-info-item">
+          <span class="user-info-label">Email Verified:</span>
+          <span class="user-info-value">
+            @if (user()?.isVerified) {
+              <span style="color: #27ae60;">Yes</span>
+            } @else {
+              <span style="color: #f39c12;">No</span>
+            }
+          </span>
+        </div>
+
+        <div class="user-info-item">
+          <span class="user-info-label">Member Since:</span>
+          <span class="user-info-value">{{ formatDate(user()?.createdAt) }}</span>
+        </div>
+
+        @if (user()?.lastLogin) {
+          <div class="user-info-item">
+            <span class="user-info-label">Last Login:</span>
+            <span class="user-info-value">{{ formatDate(user()?.lastLogin) }}</span>
+          </div>
+        }
+      </div>
+
+      <div class="alert alert-info">
+        <strong>🎉 Success!</strong> You are now logged in and can access protected resources.
+      </div>
+    </div>
+  }
+</div>

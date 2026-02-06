@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "types": ["node", "@wdio/globals/types"],
+    "target": "ES2022",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "outDir": "./dist",
+    "rootDir": "./",
+    "baseUrl": "./",
+    "paths": {
+      "@pages/*": ["./test/pageobjects/*"],
+      "@utils/*": ["./test/utils/*"],
+      "@config/*": ["./config/*"]
+    }
+  },
+  "include": [
+    "test/**/*.ts",
+    "wdio.*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

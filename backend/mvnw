@@ -1,0 +1,10 @@
+#!/bin/sh
+# Maven Wrapper Script
+# This is a simplified version - in production, use the official Maven Wrapper
+
+if [ -z "$MAVEN_HOME" ]; then
+    echo "MAVEN_HOME not set. Using system Maven..."
+    mvn "$@"
+else
+    "$MAVEN_HOME/bin/mvn" "$@"
+fi
