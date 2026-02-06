@@ -72,7 +72,7 @@ public class EmailVerificationService {
         User user = verificationToken.getUser();
         
         // Mark user as verified
-        user.setVerified(true);
+        user.setIsVerified(true);
         userRepository.save(user);
         
         // Mark token as used
@@ -94,7 +94,7 @@ public class EmailVerificationService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
         
-        if (user.isVerified()) {
+        if (Boolean.TRUE.equals(user.getIsVerified())) {
             throw new RuntimeException("Email is already verified");
         }
         
